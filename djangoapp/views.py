@@ -5,6 +5,8 @@ from .serializer import companyserializer, employeeserializer
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.pagination import PageNumberPagination
+
 
 # Create your views here.
 class CompanyViewSet(viewsets.ModelViewSet):    
@@ -30,7 +32,15 @@ class employeeViewSet(viewsets.ModelViewSet):
     queryset = Employee.objects.all()
     serializer_class = employeeserializer
 
-    
+    def retrieve(self, request, pk=None):
+        Company = Company.objects.get(id=pk)
+        employee = Company.employees.all()
+        paginator = PageNumberPagination()
+        paginator.page_size = 20
+        queryset=paginator.paginate_queryset(employee, request)
+        serializer = self.serializer_class(queryset,many=True)
+        return paginator.get_paginated_response(serializer.data)
+
 
 
         

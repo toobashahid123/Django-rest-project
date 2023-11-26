@@ -34,4 +34,4 @@ class Employee(models.Model):
     def __str__(self):
         return self.name
     
-    company = models.ForeignKey(Company, on_delete=models.CASCADE)
+    company = models.ForeignKey(Company,  related_name='employees', on_delete=models.CASCADE)
